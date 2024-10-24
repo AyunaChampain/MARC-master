@@ -1,6 +1,8 @@
  #include <stdio.h>
 #include "map.h"
 
+//Github test
+
 int main() {
     t_map map = createMapFromFile("..\\maps\\example1.map");
     printf("Map created with dimensions %d x %d\n", map.y_max, map.x_max);
