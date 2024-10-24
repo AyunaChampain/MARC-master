@@ -1,0 +1,8 @@
+//
+// Created by ayuna on 24/10/2024.
+//
+
+#ifndef UNTITLED1_NBINARYTREE_H
+#define UNTITLED1_NBINARYTREE_H
+
+#endif //UNTITLED1_NBINARYTREE_H
