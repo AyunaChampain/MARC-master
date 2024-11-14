@@ -25,5 +25,6 @@ void displayTree(t_tree);
 p_tree create_empty_tree() ;
 void add_node(p_tree, int);
 void display_tree(p_tree);
+void BFVisit(t_tree);
 
 #endif

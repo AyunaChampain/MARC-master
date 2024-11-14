@@ -13,21 +13,19 @@ p_tree create_empty_tree()
     c.left = NULL ;
 }
 
+
 void display_tree(p_tree T)
 {
-    int check = 0 ;
-    t_nnode* current ;
-    printf("%d->", T->root->value);
-    //current = T.head->L ;
-    printf("Flag");
-    //while (current->next != NULL)
+    p_nnode curr ;
+    curr = T->root ;
+    if (T->root != NULL)
     {
-        printf("%d|", current->right->value);
-        if (current->right != NULL)
+        printf("%d", T->root->value);
+        while(curr->right != NULL)
         {
-            check = 1 ;
+            curr=curr->right;
+            printf("%d", T->root->value);
         }
-        current = current -> right ;
     }
 }
 
@@ -36,6 +34,7 @@ void add_node(p_tree T, int val)
     p_nnode new ;
     p_nnode curr ;
     new = createNode(val);
+    curr = T->root ;
     if (T->root == NULL)
     {
         T-> root = new ;
