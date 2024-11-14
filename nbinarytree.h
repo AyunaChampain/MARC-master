@@ -5,41 +5,21 @@
 #ifndef UNTITLED1_NBINARYTREE_H
 #define UNTITLED1_NBINARYTREE_H
 
+#include "node.h"
 
-struct s_cell
+typedef struct s_tree
 {
-    struct s_cell *next;
-    struct s_nnode *node;
-};
+    p_node root;
+} t_tree, *p_tree;
 
-typedef struct s_cell t_cell, *p_cell;
+void BFVisit(t_tree);
 
+// pour utiliser l'affichage d'arbres
+#define LINE_SIZE 1024
+#define MAX_NB_LINES 100
 
-typedef struct s_nnode
-{
-    int value ;
-    p_cell L ;
-} t_nnode ;
+int _print_t(p_node, int , int , int, char s[MAX_NB_LINES][LINE_SIZE]);
+void print_t(p_node);
+void displayTree(t_tree);
 
-
-
-typedef struct ht_list
-{
-    t_cell* head ;
-    t_cell* tail ;
-}t_ht_list;
-
-
-typedef struct tree
-{
-    t_nnode* head ;
-}t_tree;
-
-t_nnode create_node(int, int);
-p_cell create_empty_cell(int);
-t_tree create_empty_tree();
-void add_node(t_tree, int, int);
-void display_tree(t_tree);
-
-
-#endif //UNTITLED1_NBINARYTREE_H
+#endif
