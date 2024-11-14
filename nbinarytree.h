@@ -6,10 +6,11 @@
 #define UNTITLED1_NBINARYTREE_H
 
 #include "node.h"
+#include "nbinarytree.h"
 
 typedef struct s_tree
 {
-    p_node root;
+    p_nnode root;
 } t_tree, *p_tree;
 
 void BFVisit(t_tree);
@@ -18,8 +19,11 @@ void BFVisit(t_tree);
 #define LINE_SIZE 1024
 #define MAX_NB_LINES 100
 
-int _print_t(p_node, int , int , int, char s[MAX_NB_LINES][LINE_SIZE]);
-void print_t(p_node);
+int _print_t(p_nnode, int , int , int, char s[MAX_NB_LINES][LINE_SIZE]);
+void print_t(p_nnode);
 void displayTree(t_tree);
+p_tree create_empty_tree() ;
+void add_node(p_tree, int);
+void display_tree(p_tree);
 
 #endif

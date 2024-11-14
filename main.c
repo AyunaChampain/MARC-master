@@ -1,6 +1,7 @@
  #include <stdio.h>
 #include "map.h"
 #include "nbinarytree.h"
+#include "node.h"
 
 //Github test !
 
@@ -27,9 +28,9 @@ int main() {
     displayMap(map);
 
     t_nnode node ;
-    t_tree Tree ;
+    p_tree Tree ;
     Tree = create_empty_tree();
-    add_node(Tree, 2, 1);
+    add_node(Tree, 2);
     display_tree(Tree);
 
 
