@@ -14,19 +14,11 @@ p_tree create_empty_tree()
 }
 
 
-void display_tree(p_tree T)
-{
-    p_nnode curr ;
-    curr = T->root ;
-    if (T->root != NULL)
-    {
-        printf("%d", T->root->value);
-        while(curr->right != NULL)
-        {
-            curr=curr->right;
-            printf("%d", T->root->value);
-        }
+void display_tree(p_tree T) {
+    if (T == NULL || T->root == NULL) {
+        return; // Si l'arbre est vide, on n'affiche rien
     }
+    display_node(T->root);
 }
 
 void add_node(p_tree T, int val)

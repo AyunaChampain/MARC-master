@@ -20,5 +20,6 @@ typedef struct s_nnode t_nnode, *p_nnode;
  * @return
  */
 p_nnode createNode(int);
+void display_node(p_nnode node);
 
 #endif //UNTITLED1_NODE_H
