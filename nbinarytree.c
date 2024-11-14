@@ -65,7 +65,7 @@ void display_tree_visual(p_nnode node, int depth) {
     {
         printf("    ");
     }
-    printf("%d\n", node->value);  // Affiche la valeur du nœud
+    printf("|--[%d]\n", node->value);  // Affiche la valeur du nœud
 
     display_tree_visual(node->left, depth + 1);   // Affiche le sous-arbre gauche
 }
@@ -77,4 +77,29 @@ void display_tree_structure(p_tree T) {
         return;
     }
     display_tree_visual(T->root, 0);  // Démarre l'affichage à la racine avec une profondeur de 0
+}
+
+
+p_nnode searchmin(p_tree T)
+{
+    p_nnode curr ;
+    curr = T->root ;
+    int depth = 0 ;
+
+    while (curr->right != NULL)
+    {
+        curr = curr->right;
+        depth ++ ;
+    }
+    printf("depth = %d\n", depth);
+
+
+
+
+
+
+
+
+
+    return (curr);
 }

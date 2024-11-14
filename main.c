@@ -37,6 +37,10 @@ int main() {
     add_node(Tree, 4);
     display_tree_structure(Tree);
 
+    p_nnode min ;
+    min = searchmin(Tree);
+    printf("\n min = %d", min->value);
+
 
     return 0;
 }
