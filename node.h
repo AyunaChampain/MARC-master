@@ -20,6 +20,8 @@ typedef struct s_nnode t_nnode, *p_nnode;
  * @return
  */
 p_nnode createNode(int);
-void display_node(p_nnode node);
+void display_node(p_nnode);
+void minnode(p_nnode, int);
+void add_depth(p_nnode, int);
 
 #endif //UNTITLED1_NODE_H
