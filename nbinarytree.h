@@ -31,5 +31,6 @@ void display_tree_structure(p_tree T);
 void display_tree_visual(p_nnode node, int depth);
 
 p_nnode searchmin(p_tree); //Fonction qui permet de retrouver la feuille de l'arbre avec la plus petite valeur
+p_nnode searchleaf(p_nnode, p_nnode);
 
 #endif

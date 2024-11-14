@@ -85,7 +85,7 @@ p_nnode searchmin(p_tree T)
     p_nnode curr ;
     curr = T->root ;
     int depth = 0 ;
-    int i = 0 ;
+    p_nnode min = T->root ;
 
     while (curr->right != NULL)
     {
@@ -94,13 +94,25 @@ p_nnode searchmin(p_tree T)
     }
     printf("depth = %d\n", depth);
 
-    curr = T->root ;
+    min = searchleaf(T->root, min);
+    return (min);
+}
 
 
+p_nnode searchleaf(p_nnode node, p_nnode min)
+{
+    if (node == NULL)
+        return min;
 
-
-
-
-
-    return (curr);
+    if (node->right == NULL && node->left == NULL)
+    {
+        if (min->value > node->value)
+        {
+            min = node ;
+        }
+        return min;
+    }
+    min = searchleaf(node->right, min);
+    min = searchleaf(node->left, min);
+    return min ;
 }
