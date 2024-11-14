@@ -31,7 +31,11 @@ int main() {
     p_tree Tree ;
     Tree = create_empty_tree();
     add_node(Tree, 2);
-    display_tree(Tree);
+    add_node(Tree, 3);
+    add_node(Tree, 5);
+    add_node(Tree, 1);
+    add_node(Tree, 4);
+    display_tree_structure(Tree);
 
 
     return 0;
