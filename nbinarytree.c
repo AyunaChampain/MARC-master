@@ -22,52 +22,30 @@ void display_tree(p_tree T) {
     display_node(T->root);
 }
 
-void add_node(p_tree T, int val)
-{
-    p_nnode new ;
-    p_nnode curr ;
+void add_node(p_tree T, int parent_val, int child_val) {
+    if (T == NULL || T->root == NULL) return;
 
-    p_nnode parent = NULL;
-    new = createNode(val);
-    curr = T->root ;
-    if (T->root == NULL)
-    {
-        T-> root = new ;
-    }
-    else
-    {
-        while (curr != NULL)
-        {
-            parent = curr;
-            if (val < curr->value) {
-                curr = curr->left;
-            } else {
-                curr = curr->right;
-            }
-        }
-        if (val < parent->value) {
-            parent->left = new;
-        } else {
-            parent->right = new;
-        }
+    // Find the parent node using a search function
+    p_nnode parent = find_node(T->root, parent_val);
+    if (parent != NULL) {
+        add_child(parent, child_val);
     }
 }
 
 
 void display_tree_visual(p_nnode node, int depth) {
-    if (node == NULL) {
-        return;
-    }
-    display_tree_visual(node->right, depth + 1);  // Affiche le sous-arbre droit en premier pour décaler à droite
+    if (node == NULL) return;
 
-    // Indentation pour chaque niveau
-    for (int i = 0; i < depth; i++)
-    {
+    // Indent for each depth
+    for (int i = 0; i < depth; i++) {
         printf("    ");
     }
-    printf("|--[%d]\n", node->value);  // Affiche la valeur du nœud
+    printf("|--[%d]\n", node->value);
 
-    display_tree_visual(node->left, depth + 1);   // Affiche le sous-arbre gauche
+    // Display all children
+    for (int i = 0; i < node->child_count; i++) {
+        display_tree_visual(node->children[i], depth + 1);
+    }
 }
 
 // Appel de la fonction avec la racine
@@ -80,39 +58,71 @@ void display_tree_structure(p_tree T) {
 }
 
 
-p_nnode searchmin(p_tree T)
-{
-    p_nnode curr ;
-    curr = T->root ;
-    int depth = 0 ;
-    p_nnode min = T->root ;
+p_nnode searchmin(p_nnode node, p_nnode min) {
+    if (node == NULL) return min;
+    if (node->value < min->value) min = node;
 
-    while (curr->right != NULL)
-    {
-        curr = curr->right;
-        depth ++ ;
+    for (int i = 0; i < node->child_count; i++) {
+        min = searchmin(node->children[i], min);
     }
-    printf("depth = %d\n", depth);
-
-    min = searchleaf(T->root, min);
-    return (min);
+    return min;
 }
 
 
-p_nnode searchleaf(p_nnode node, p_nnode min)
-{
+
+p_nnode searchleaf(p_nnode node, p_nnode min) {
     if (node == NULL)
         return min;
 
-    if (node->right == NULL && node->left == NULL)
-    {
-        if (min->value > node->value)
-        {
-            min = node ;
+    // Check if the current node is a leaf
+    if (node->child_count == 0) {
+        if (min == NULL || node->value < min->value) {
+            min = node;
         }
-        return min;
     }
-    min = searchleaf(node->right, min);
-    min = searchleaf(node->left, min);
-    return min ;
+
+    // Recursively check all children
+    for (int i = 0; i < node->child_count; i++) {
+        min = searchleaf(node->children[i], min);
+    }
+
+    return min;
+}
+
+
+int findpath(p_nnode node, p_nnode target, p_nnode chemin[], int* index) {
+    if (node == NULL) {
+        return 0;
+    }
+
+    // Add the current node to the path
+    chemin[(*index)++] = node;
+
+    // Check if the current node is the target
+    if (node == target) {
+        return 1;
+    }
+
+    // Recursively search each child
+    for (int i = 0; i < node->child_count; i++) {
+        if (findpath(node->children[i], target, chemin, index)) {
+            return 1;
+        }
+    }
+
+    // Backtrack if the target is not found in this path
+    (*index)--;
+    return 0;
+}
+
+
+p_nnode find_node(p_nnode node, int val) {
+    if (node == NULL) return NULL;
+    if (node->value == val) return node;
+
+    for (int i = 0; i < node->child_count; i++) {
+        p_nnode found = find_node(node->children[i], val);
+        if (found != NULL) return found;
+    }
+    return NULL;
 }

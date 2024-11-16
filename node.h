@@ -5,14 +5,13 @@
 #ifndef UNTITLED1_NODE_H
 #define UNTITLED1_NODE_H
 
-struct s_nnode
-{
+typedef struct nnode {
     int value;
-    struct s_nnode   *left, *right;
-    int depth;
-};
+    struct nnode** children;  // Dynamic array of pointers to child nodes
+    int child_count;          // Number of children
+} t_nnode, *p_nnode;
 
-typedef struct s_nnode t_nnode, *p_nnode;
+
 
 /***
  * @brief
@@ -23,5 +22,6 @@ p_nnode createNode(int);
 void display_node(p_nnode);
 void minnode(p_nnode, int);
 void add_depth(p_nnode, int);
+void add_child(p_nnode parent, int val);
 
 #endif //UNTITLED1_NODE_H
