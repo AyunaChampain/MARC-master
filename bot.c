@@ -54,11 +54,16 @@ p_nnode buildTree(t_map map, int posx, int posy, int depth) {
 
 void bot_function(struct s_map map, int arx, int ary)
 {
-    int posx = 5 ;
-    int posy = 6 ;
-    int cpt = 0 ;
-    while (posx != arx && posy != ary)
+    int posx = 4;
+    int posy = 6;
+    int cpt = 1;
+
+    p_nnode chemin_complet[1000]; // Tableau pour stocker le chemin complet
+    int chemin_complet_index = 0;
+
+    while (posx != arx || posy != ary)
     {
+        printf("%dth phase\n", cpt);
         p_nnode root = buildTree(map, posx, posy, 5);
         //display_tree_visual(root, 0);
 
@@ -74,14 +79,33 @@ void bot_function(struct s_map map, int arx, int ary)
                 printf("[%d] ", chemin[i]->value);
             }
             printf("\n");
-        } else {
-            printf("No path found to min.\n");
         }
-        p_nnode destination = chemin[index - 1];
-        posx = destination->x ;
-        posy = destination->y;
-        cpt ++ ;
-        printf("%dth phase", cpt);
+        else
+        {
+            printf("No path found to min.\n");
+            break;
+        }
 
+        int i ;
+        if (chemin_complet_index > 0)
+        {
+            i = 1 ;
+        }
+        else
+        {
+            i = 0 ;
+        }
+        for (i; i < index; i++) {
+            chemin_complet[chemin_complet_index++] = chemin[i];
+            // Mettre à jour la position
+            posx = chemin[i]->x;
+            posy = chemin[i]->y;
+        }
+
+        cpt++;
+    }
+
+    for (int j = 0; j < chemin_complet_index; j++) {
+        printf("[%d] ", chemin_complet[j]->value);
     }
 }

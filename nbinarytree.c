@@ -97,6 +97,10 @@ p_nnode searchleaf(p_nnode node, p_nnode min) {
     if (node == NULL)
         return min;
 
+    if (node->value > 999) {
+        return min;
+    }
+
     // Check if the current node is a leaf
     if (node->child_count == 0) {
         if (min == NULL || node->value < min->value) {
