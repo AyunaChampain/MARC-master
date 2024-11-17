@@ -22,18 +22,41 @@ void display_tree(p_tree T) {
     display_node(T->root);
 }
 
-void add_node(p_tree T, int parent_val, int child_val) {
-    if (T == NULL || T->root == NULL) return;
+void display_tree_visual(p_nnode node, int depth) {
+    if (node == NULL) {
+        return;
+    }
 
-    // Find the parent node using a search function
-    p_nnode parent = find_node(T->root, parent_val);
-    if (parent != NULL) {
-        add_child(parent, child_val);
+    // Affichage du nœud actuel
+    for (int i = 0; i < depth; i++) {
+        printf("    ");  // Indentation pour les sous-niveaux
+    }
+    printf("[%03d]\n", node->value);
+
+    // Affichage des enfants s'ils existent
+    if (node->child_count > 0) {
+        for (int i = 0; i < node->child_count; i++) {
+            for (int j = 0; j < depth; j++) {
+                printf("    ");  // Indentation pour les sous-niveaux
+            }
+        }
+        printf("\n");
+
+        // Affichage des flèches vers les enfants
+        for (int i = 0; i < node->child_count; i++) {
+            for (int j = 0; j < depth + 1; j++) {
+                printf("    ");
+            }
+            printf("|\n");
+
+            // Affichage des enfants eux-mêmes
+            display_tree_visual(node->children[i], depth + 1);
+        }
     }
 }
 
 
-void display_tree_visual(p_nnode node, int depth) {
+/*void display_tree_visual(p_nnode node, int depth) {
     if (node == NULL) return;
 
     // Indent for each depth
@@ -46,7 +69,7 @@ void display_tree_visual(p_nnode node, int depth) {
     for (int i = 0; i < node->child_count; i++) {
         display_tree_visual(node->children[i], depth + 1);
     }
-}
+}*/
 
 // Appel de la fonction avec la racine
 void display_tree_structure(p_tree T) {
@@ -126,3 +149,5 @@ p_nnode find_node(p_nnode node, int val) {
     }
     return NULL;
 }
+
+

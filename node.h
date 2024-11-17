@@ -22,6 +22,6 @@ p_nnode createNode(int);
 void display_node(p_nnode);
 void minnode(p_nnode, int);
 void add_depth(p_nnode, int);
-void add_child(p_nnode parent, int val);
+void add_child(p_nnode parent, p_nnode val);
 
 #endif //UNTITLED1_NODE_H

@@ -34,6 +34,7 @@ p_nnode searchmin(p_nnode, p_nnode); //Fonction qui permet de retrouver la feuil
 p_nnode searchleaf(p_nnode, p_nnode);
 int findpath(p_nnode, p_nnode, p_nnode*, int*);
 
+
 p_nnode find_node(p_nnode, int);
 
 #endif
