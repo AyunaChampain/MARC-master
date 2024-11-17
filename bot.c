@@ -8,6 +8,9 @@
 #include "map.h"
 #include "node.h"
 #include "loc.h"
+#include "moves.h"
+#include "stack.h"
+#include "queue.h"
 
 
 
@@ -50,6 +53,44 @@ p_nnode buildTree(t_map map, int posx, int posy, int depth) {
 
     return root ;
 }
+
+// Cette fonction s'appelle dans la fonction principale après chaque tirage de mouvement
+t_move adjustMoveForTerrain(t_localisation loc, t_move move, t_soil map[6][7])
+{
+    int x = loc.pos.x;
+    int y = loc.pos.y;
+
+    // Vérifiez si MARC est sur un "erg" (sol meuble)
+    if (map[x][y] == ERG) {
+        // Ajustez les mouvements selon les règles de l'erg
+        if (move == F_30) {
+            move = F_20; // Réduire le mouvement de 30m à 20m
+        }
+        else if (move == F_20) {
+            move = F_10; // Réduire le mouvement de 20m à 10m
+        }
+    }
+        // Vérifiez si MARC est sur un "reg" (sol accidenté)
+    else if (map[x][y] == REG) {
+        // Appliquez les règles de REG (par exemple, limitation des mouvements)
+        // Par exemple, réduire le nombre de mouvements disponibles dans la phase suivante
+    }
+        // Vérifiez si MARC est sur une "crevasse"
+    else if (map[x][y] == CREVASSE) {
+        // Terminer la simulation si MARC tombe dans une crevasse
+        printf("MARC has fallen into a crevasse!\n");
+        exit(0); // Arrêt immédiat
+    }
+        // Vérifiez si MARC est sur une "pente"
+    else if (map[x][y] == PLAIN) {
+        // Appliquez les règles de pente si MARC est sur une pente
+        // Par exemple, ajouter un mouvement dans la direction de la pente
+    }
+
+    return move;
+}
+
+
 
 
 void bot_function(struct s_map map, int arx, int ary)
@@ -97,7 +138,6 @@ void bot_function(struct s_map map, int arx, int ary)
         }
         for (i; i < index; i++) {
             chemin_complet[chemin_complet_index++] = chemin[i];
-            // Mettre à jour la position
             posx = chemin[i]->x;
             posy = chemin[i]->y;
         }
