@@ -118,22 +118,22 @@ int findpath(p_nnode node, p_nnode target, p_nnode chemin[], int* index) {
         return 0;
     }
 
-    // Add the current node to the path
+    // Ajouter le nœud actuel au chemin
     chemin[(*index)++] = node;
 
-    // Check if the current node is the target
+    // Vérifier si le nœud actuel est le nœud cible
     if (node == target) {
-        return 1;
+        return 1;  // Trouvé !
     }
 
-    // Recursively search each child
+    // Recherche récursive dans les enfants
     for (int i = 0; i < node->child_count; i++) {
         if (findpath(node->children[i], target, chemin, index)) {
-            return 1;
+            return 1;  // Trouvé un chemin via un enfant
         }
     }
 
-    // Backtrack if the target is not found in this path
+    // Si le chemin n'est pas trouvé, retour arrière
     (*index)--;
     return 0;
 }

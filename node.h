@@ -9,6 +9,8 @@ typedef struct nnode {
     int value;
     struct nnode** children;  // Dynamic array of pointers to child nodes
     int child_count;          // Number of children
+    int x;      // Coordonnée x
+    int y;
 } t_nnode, *p_nnode;
 
 
@@ -18,7 +20,7 @@ typedef struct nnode {
  * @param
  * @return
  */
-p_nnode createNode(int);
+p_nnode createNode(int, int, int);
 void display_node(p_nnode);
 void minnode(p_nnode, int);
 void add_depth(p_nnode, int);

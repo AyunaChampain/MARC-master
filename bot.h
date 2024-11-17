@@ -9,7 +9,9 @@
 
 
 void addNeighborsAsChildren(p_nnode, t_position, t_map);
-void buildTree(t_map, int, int, int);
+p_nnode buildTree(t_map, int, int, int);
 void addNeighborsAsChildrenRecursive(p_nnode, t_position, t_map, int) ;
+
+void bot_function(struct s_map, int, int) ;
 
 #endif //UNTITLED1_BOT_H
