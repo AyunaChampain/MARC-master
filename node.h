@@ -4,6 +4,7 @@
 
 #ifndef UNTITLED1_NODE_H
 #define UNTITLED1_NODE_H
+#include "moves.h"
 
 typedef struct nnode {
     int value;
@@ -11,6 +12,7 @@ typedef struct nnode {
     int child_count;          // Number of children
     int x;      // Coordonnée x
     int y;
+    t_move movement;
 } t_nnode, *p_nnode;
 
 
@@ -20,7 +22,7 @@ typedef struct nnode {
  * @param
  * @return
  */
-p_nnode createNode(int, int, int);
+p_nnode createNode(int, int, int, t_move);
 void display_node(p_nnode);
 void minnode(p_nnode, int);
 void add_depth(p_nnode, int);

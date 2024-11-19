@@ -6,7 +6,7 @@
 #include "node.h"
 
 
-p_nnode createNode(int val, int x, int y)
+p_nnode createNode(int val, int x, int y, t_move mov)
 {
     p_nnode nouv = (p_nnode)malloc(sizeof(t_nnode));
     if (nouv == NULL) {
@@ -18,6 +18,7 @@ p_nnode createNode(int val, int x, int y)
     nouv->child_count = 0;   // Zero children
     nouv->x = x;
     nouv->y = y;
+    nouv->movement = mov;
     return nouv;
 }
 

@@ -52,85 +52,32 @@ t_localisation translate(t_localisation loc, t_move move)
      *  - y grows to the bottom with step of +1
      *  - the origin (x=0, y=0) is at the top left corner
      */
-    t_position res= loc.pos;
+    t_position res = loc.pos;
     switch (move) {
         case F_10:
+            // Move forward in the current orientation
             switch (loc.ori) {
-                case NORTH:
-                    res.y = loc.pos.y - 1;
-                    break;
-                case EAST:
-                    res.x = loc.pos.x + 1;
-                    break;
-                case SOUTH:
-                    res.y = loc.pos.y + 1;
-                    break;
-                case WEST:
-                    res.x = loc.pos.x - 1;
-                    break;
-                default:
-                    break;
-            }
-            break;
-        case F_20:
-            switch (loc.ori) {
-                case NORTH:
-                    res.y = loc.pos.y - 2;
-                    break;
-                case EAST:
-                    res.x = loc.pos.x + 2;
-                    break;
-                case SOUTH:
-                    res.y = loc.pos.y + 2;
-                    break;
-                case WEST:
-                    res.x = loc.pos.x - 2;
-                    break;
-                default:
-                    break;
-            }
-            break;
-        case F_30:
-            switch (loc.ori) {
-                case NORTH:
-                    res.y = loc.pos.y - 3;
-                    break;
-                case EAST:
-                    res.x = loc.pos.x + 3;
-                    break;
-                case SOUTH:
-                    res.y = loc.pos.y + 3;
-                    break;
-                case WEST:
-                    res.x = loc.pos.x - 3;
-                    break;
-                default:
-                    break;
+                case NORTH: res.y = loc.pos.y - 1; break;
+                case EAST:  res.x = loc.pos.x + 1; break;
+                case SOUTH: res.y = loc.pos.y + 1; break;
+                case WEST:  res.x = loc.pos.x - 1; break;
+                default: break;
             }
             break;
         case B_10:
+            // Move backward in the current orientation
             switch (loc.ori) {
-                case NORTH:
-                    res.y = loc.pos.y + 1;
-                    break;
-                case EAST:
-                    res.x = loc.pos.x - 1;
-                    break;
-                case SOUTH:
-                    res.y = loc.pos.y - 1;
-                    break;
-                case WEST:
-                    res.x = loc.pos.x + 1;
-                    break;
-                default:
-                    break;
+                case NORTH: res.y = loc.pos.y + 1; break;
+                case EAST:  res.x = loc.pos.x - 1; break;
+                case SOUTH: res.y = loc.pos.y - 1; break;
+                case WEST:  res.x = loc.pos.x + 1; break;
+                default: break;
             }
             break;
-        default:
-            break;
+            // Add other cases as needed
+        default: break;
     }
-        return loc_init(res.x, res.y, loc.ori);
-
+    return loc_init(res.x, res.y, loc.ori);  // Return updated location
 }
 
 /* definitions of exported functions */
@@ -148,8 +95,11 @@ t_localisation move(t_localisation loc, t_move move)
     return new_loc;
 }
 
-void updateLocalisation(t_localisation *p_loc, t_move m)
+void updateLocalisation(t_localisation *p_loc, t_move move)
 {
-    *p_loc = move(*p_loc, m);
-    return;
+    // First, update the orientation if the move is a turn
+    p_loc->ori = rotate(p_loc->ori, move);
+
+    // Then, update the position (translation)
+    *p_loc = translate(*p_loc, move);  // This function updates the position based on the orientation and move
 }

@@ -15,12 +15,7 @@ p_tree create_empty_tree()
 }
 
 
-void display_tree(p_tree T) {
-    if (T == NULL || T->root == NULL) {
-        return; // Si l'arbre est vide, on n'affiche rien
-    }
-    display_node(T->root);
-}
+
 
 void display_tree_visual(p_nnode node, int depth) {
     if (node == NULL) {
@@ -31,7 +26,9 @@ void display_tree_visual(p_nnode node, int depth) {
     for (int i = 0; i < depth; i++) {
         printf("    ");  // Indentation pour les sous-niveaux
     }
-    printf("[%03d]\n", node->value);
+    printf("[%03d]", node->value);
+    printf("%s\n", getMoveAsString(node->movement));
+
 
     // Affichage des enfants s'ils existent
     if (node->child_count > 0) {
@@ -56,20 +53,6 @@ void display_tree_visual(p_nnode node, int depth) {
 }
 
 
-/*void display_tree_visual(p_nnode node, int depth) {
-    if (node == NULL) return;
-
-    // Indent for each depth
-    for (int i = 0; i < depth; i++) {
-        printf("    ");
-    }
-    printf("|--[%d]\n", node->value);
-
-    // Display all children
-    for (int i = 0; i < node->child_count; i++) {
-        display_tree_visual(node->children[i], depth + 1);
-    }
-}*/
 
 // Appel de la fonction avec la racine
 void display_tree_structure(p_tree T) {

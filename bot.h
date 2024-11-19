@@ -11,7 +11,7 @@
 
 void addNeighborsAsChildren(p_nnode, t_position, t_map);
 p_nnode buildTree(t_map, int, int, int);
-void addNeighborsAsChildrenRecursive(p_nnode, t_position, t_map, int) ;
+void addNeighborsAsChildrenRecursive(p_nnode, t_position, t_map, int, t_move mov) ;
 
 void bot_function(struct s_map, int, int) ;
 t_move adjustMoveForTerrain(t_localisation loc, t_move move, t_soil map[6][7]);
