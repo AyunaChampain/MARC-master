@@ -12,135 +12,128 @@
 #include "stack.h"
 #include "queue.h"
 
-int isValidPosition(int x, int y, t_map map)
-{
-    return x >= 0 && x < map.x_max && y >= 0 && y < map.y_max;  // Assurez-vous que la position est dans les limites
+int isValidPosition(int x, int y, t_map map) {
+    return x >= 0 && x < map.x_max && y >= 0 && y < map.y_max;
 }
 
-void addNeighborsAsChildrenRecursive(p_nnode node, t_position pos, t_map map, int depth, t_move move)
-{
+
+void addNeighborsAsChildrenRecursive(p_nnode node, t_localisation loc, t_map map, int depth) {
     if (depth <= 0) {
-        return;  // Arrêter la récursion si on atteint la profondeur limite
+        return;  // Stop recursion at depth 0
     }
 
-    // Définir les déplacements possibles
-    t_position moves[] = {
-            {pos.x + 1, pos.y}, // Mouvement vers la droite
-            {pos.x - 1, pos.y}, // Mouvement vers la gauche
-            {pos.x, pos.y + 1}, // Mouvement vers le bas
-            {pos.x, pos.y - 1}  // Mouvement vers le haut
-    };
+    t_move moves[] = {F_10, F_20, B_10, T_LEFT, T_RIGHT, U_TURN};
 
-    // Essayer chaque déplacement
-    for (int i = 0; i < 4; i++) {
-        int new_x = moves[i].x;
-        int new_y = moves[i].y;
+    // Try each move
+    for (int i = 0; i < 6; i++) {  // Updated to loop through all 6 possible moves
+        t_move mov = moves[i];
+        t_localisation next_loc = move(loc, mov);
 
-        // Vérifier si la position est valide avant de l'ajouter
-        if (isValidPosition(new_x, new_y, map)) {
-            int cost = map.costs[new_y][new_x];  // Coût du voisin valide
-            t_move new_move = move;
+        // Check if the position is valid
+        if (isValidPosition(next_loc.pos.x, next_loc.pos.y, map)) {  // Corrected validation
+            int cost = map.costs[next_loc.pos.y][next_loc.pos.x];
 
-            // Créer un nœud pour le voisin et l'ajouter en tant qu'enfant
-            p_nnode child = createNode(cost, new_x, new_y, new_move);
-            add_child(node, child);  // Ajouter le nœud enfant au nœud actuel
+            // Create the child node and assign the move leading to it
+            p_nnode child = createNode(cost, next_loc.pos.x, next_loc.pos.y, mov);
 
-            // Appel récursif pour ajouter les voisins du voisin
-            addNeighborsAsChildrenRecursive(child, moves[i], map, depth - 1, new_move);
+            // Add child to the parent node
+            add_child(node, child);
+
+            // Recursive call for this child
+            addNeighborsAsChildrenRecursive(child, next_loc, map, depth - 1);
         }
     }
 }
 
-p_nnode buildTree(t_map map, int posx, int posy, int depth) {
-    // Créer la racine de l'arbre
-    t_position pos = {posx, posy};
-    int root_cost = map.costs[posy][posx];
-    p_nnode root = createNode(root_cost, posx, posy, F_10);  // F_10 initialisé comme mouvement de départ
 
-    // Ajouter les voisins à la racine
-    addNeighborsAsChildrenRecursive(root, pos, map, depth, F_10);
+p_nnode buildTree(t_map map, int posx, int posy, int depth)
+{
+    t_localisation start_loc = loc_init(posx, posy, NORTH); // Starting orientation
+    int root_cost = map.costs[posy][posx];
+
+    // Root node with no movement leading to it (initial state)
+    p_nnode root = createNode(root_cost, posx, posy, F_10);
+
+    // Add neighbors recursively
+    addNeighborsAsChildrenRecursive(root, start_loc, map, depth); // Increase depth here
 
     return root;
 }
 
 
+void move_robot_and_print(t_localisation *loc, t_move movement, t_map map) {
+    // Perform the movement but check if it stays within bounds first
+    t_localisation new_loc = move(*loc, movement);
 
-
-void move_robot_and_print(t_localisation *loc, t_move movement) {
-    // Effectuer le mouvement
-    *loc = move(*loc, movement);
-
-    // Afficher le nom du mouvement et la nouvelle position
-    printf("Moved to position (%d, %d) using move: %s\n", loc->pos.x, loc->pos.y, getMoveAsString(movement));
-}
-
-
-void bot_function(struct s_map map, int arx, int ary)
-{
-    int posx = 4;  // Starting x position
-    int posy = 6;  // Starting y position
-    int cpt = 1;
-
-    t_localisation loc = loc_init(posx, posy, NORTH);  // Initialize the bot's position and orientation (assuming 'NORTH' is the initial orientation)
-
-    p_nnode chemin_complet[1000];  // Array to store the complete path
-    int chemin_complet_index = 0;
-
-    while (posx != arx || posy != ary)
-    {
-        printf("%dth phase\n", cpt);
-        p_nnode root = buildTree(map, posx, posy, 5);
-        display_tree_visual(root, 0);
-
-        p_nnode min = searchleaf(root, root);  // Find the minimum cost leaf node
-        printf("Minimum value in tree: %d\n", min->value);
-
-        p_nnode chemin[100];  // Array to store the path
-        int index = 0;        // Path index
-
-        if (findpath(root, min, chemin, &index)) {
-            printf("Path from root to min: ");
-            for (int i = 0; i < index; i++) {
-                printf("[%d] ", chemin[i]->value);  // Print path values (these are assumed to be move types)
-            }
-            printf("\n");
-        }
-        else {
-            printf("No path found to min.\n");
-            break;
-        }
-
-        // Store the path from the root to the destination
-        int i;
-        if (chemin_complet_index > 0) {
-            i = 1;  // Skip the first element (if already there)
+    // Check if the new position is within bounds
+    if (isValidPosition(new_loc.pos.x, new_loc.pos.y, map)) {
+        if (movement == T_LEFT || movement == T_RIGHT || movement == U_TURN) {
+            printf("Turn: %s\n", getMoveAsString(movement));
+            *loc = new_loc;  // Only update orientation
         } else {
-            i = 0;  // Start from the first element
+            printf("Move: %s\n", getMoveAsString(movement));
+            *loc = new_loc;  // Update both position and orientation
         }
-        for (i; i < index; i++) {
-            chemin_complet[chemin_complet_index++] = chemin[i];
-            posx = chemin[i]->x;
-            posy = chemin[i]->y;
-        }
-
-        // Execute the moves along the path
-        for (int i = 0; i < chemin_complet_index; i++) {
-            t_move move = chemin_complet[i]->value;  // Assuming 'value' contains the move type (e.g., F_10, T_LEFT, etc.)
-
-            // Check if the move is a turn or a translation (forward/backward)
-            if (move == T_LEFT || move == T_RIGHT || move == U_TURN) {
-                printf("Turn: %s\n", getMoveAsString(move));  // Print the turn type
-                updateLocalisation(&loc, move);  // Update orientation for turn
-            } else {
-                printf("Move: %s\n", getMoveAsString(move));  // Print the forward/backward move
-                updateLocalisation(&loc, move);  // Update position and orientation for forward/backward move
-            }
-
-            // After moving, print the new position and orientation
-            printf("Moved to position (%d, %d) with orientation %d\n", loc.pos.x, loc.pos.y, loc.ori);
-        }
-        cpt++;
+        printf("Updated position: (%d, %d), orientation: %d\n", loc->pos.x, loc->pos.y, loc->ori);
+    } else {
+        // Print a warning if the move goes out of bounds
+        printf("Invalid move: The robot cannot move out of bounds to (%d, %d).\n", new_loc.pos.x, new_loc.pos.y);
     }
 }
 
 
+
+
+void bot_function(struct s_map map, int arx, int ary) {
+    int cpt = 1;
+
+    t_localisation loc = loc_init(4, 6, NORTH);  // Starting position and orientation
+    p_nnode chemin_complet[1000];  // Full path
+    int chemin_complet_index = 0;
+
+    while (loc.pos.x != arx || loc.pos.y != ary) {
+        printf("%dth phase\n", cpt);
+
+        // Build the tree
+        p_nnode root = buildTree(map, loc.pos.x, loc.pos.y, 5);
+        p_nnode min = searchleaf(root, root);  // Find the minimum-cost leaf
+        printf("Minimum value in tree: %d\n", min->value);
+
+        p_nnode chemin[100];
+        int index = 0;
+
+        // Find the path to the minimum-cost node
+        if (findpath(root, min, chemin, &index)) {
+            printf("Path from root to min: ");
+            for (int i = 0; i < index; i++) {
+                printf("[%d] ", chemin[i]->value);
+            }
+            printf("\n");
+        } else {
+            printf("No path found to min.\n");
+            break;
+        }
+
+        // Add the found path to the full path
+        for (int i = 0; i < index; i++) {
+            chemin_complet[chemin_complet_index++] = chemin[i];
+        }
+
+        // Execute the moves and check if we're at the base
+        for (int i = 0; i < chemin_complet_index; i++) {
+            t_move move = chemin_complet[i]->movement;
+            move_robot_and_print(&loc, move, map);  // Pass map for validation
+
+            // After each move, check if the robot has reached the target position
+            if (loc.pos.x == arx && loc.pos.y == ary) {
+                printf("Target reached: (%d, %d)\n", loc.pos.x, loc.pos.y);
+                return;  // Exit the function as the robot has reached the base
+            }
+        }
+
+        cpt++;
+    }
+
+    // If the loop exits, the target was reached
+    printf("Final position: (%d, %d), orientation: %d\n", loc.pos.x, loc.pos.y, loc.ori);
+}

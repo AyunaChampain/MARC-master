@@ -25,25 +25,17 @@ t_localisation translate(t_localisation , t_move);
 
 /* definition of local functions */
 
-t_orientation rotate(t_orientation ori, t_move move)
-{
-    int rst;
-    switch (move)
-    {
-        case T_LEFT:
-            rst=3;
-            break;
-        case T_RIGHT:
-            rst=1;
-            break;
-        case U_TURN:
-            rst=2;
-            break;
-        default:
-            break;
+t_orientation rotate(t_orientation ori, t_move move) {
+    int rst = 0;  // Default: no change in orientation
+    switch (move) {
+        case T_LEFT: rst = 3; break;
+        case T_RIGHT: rst = 1; break;
+        case U_TURN: rst = 2; break;
+        default: break;  // No rotation for other moves
     }
-    return (ori+rst)%4;
+    return (ori + rst) % 4;
 }
+
 
 t_localisation translate(t_localisation loc, t_move move)
 {
@@ -64,6 +56,16 @@ t_localisation translate(t_localisation loc, t_move move)
                 default: break;
             }
             break;
+        case F_20:
+            switch (loc.ori) {
+                case NORTH: res.y = loc.pos.y - 2; break;
+                case EAST:  res.x = loc.pos.x + 2; break;
+                case SOUTH: res.y = loc.pos.y + 2; break;
+                case WEST:  res.x = loc.pos.x - 2; break;
+                default: break;
+            }
+            break;
+
         case B_10:
             // Move backward in the current orientation
             switch (loc.ori) {
@@ -87,13 +89,11 @@ char *getMoveAsString(t_move move)
     return _moves[move];
 }
 
-t_localisation move(t_localisation loc, t_move move)
-{
-    t_localisation new_loc;
-    new_loc.ori = rotate(loc.ori, move);
-    new_loc = translate(loc, move);
-    return new_loc;
+t_localisation move(t_localisation loc, t_move move) {
+    loc.ori = rotate(loc.ori, move);  // Update orientation
+    return translate(loc, move);     // Update position based on new orientation
 }
+
 
 void updateLocalisation(t_localisation *p_loc, t_move move)
 {

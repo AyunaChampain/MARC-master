@@ -49,7 +49,5 @@
      bot_function(map, arx, ary);
 
 
-
-
      return 0;
  }
