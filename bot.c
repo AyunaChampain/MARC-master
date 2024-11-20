@@ -23,49 +23,31 @@ t_weighted_move weighted_moves[NUM_MOVES] = {
 };
 
 // Function to choose a random move based on current probabilities
-// Function to choose a random move based on current probabilities
 t_move choose_random_move(t_weighted_move moves[], int size) {
     double total_weight = 0.0;
 
-    // Calculate the total weight
     for (int i = 0; i < size; i++) {
         total_weight += moves[i].probability;
     }
 
-    // Generate a random number within the total weight range
     double random_value = ((double)rand() / RAND_MAX) * total_weight;
 
-    // Select a move based on the random value
     for (int i = 0; i < size; i++) {
         if (random_value < moves[i].probability) {
-            // Print the selected move
-            printf("Chosen move: %s with probability %.2f\n", getMoveAsString(moves[i].move), moves[i].probability);
             return moves[i].move;
         }
         random_value -= moves[i].probability;
     }
 
-    return moves[0].move;  // Default fallback
+    return moves[0].move; // Default fallback
 }
 
-
 // Function to generate a pool of 9 random moves
-// Function to generate random moves and print them
 void generate_random_moves_pool(t_move pool[], int pool_size, t_weighted_move moves[], int num_moves) {
-    printf("Generating random moves:\n");
-
-    // Choose random moves and store them in the pool
     for (int i = 0; i < pool_size; i++) {
         pool[i] = choose_random_move(moves, num_moves);
     }
-
-    // Print all selected moves
-    printf("\nSelected moves:\n");
-    for (int i = 0; i < pool_size; i++) {
-        printf("Move #%d: %s\n", i + 1, getMoveAsString(pool[i]));
-    }
 }
-
 
 // Function to print the generated moves
 void print_moves_pool(t_move pool[], int pool_size) {
@@ -154,85 +136,66 @@ void move_robot_and_print(t_localisation *loc, t_move movement, t_map map, int* 
 }
 
 // Main bot function
-// Main bot function
 void bot_function(struct s_map map, int arx, int ary) {
     int cpt = 1;  // Phase counter
-    int reg = 0;  // Flag to indicate if we are on Reg terrain
+    int reg = 0 ;
 
     t_localisation loc = loc_init(5, 6, NORTH);  // Starting position and orientation
     p_nnode chemin_complet[1000];  // Full path
     int chemin_complet_index = 0;
 
-    // Define weighted moves pool (with costs associated to each move)
-    t_weighted_move weighted_moves[NUM_MOVES] = {
-            {F_10, 22.0},
-            {F_20, 15.0},
-            {F_30, 7.0},
-            {B_10, 7.0},
-            {T_LEFT, 21.0},
-            {T_RIGHT, 21.0},
-            {U_TURN, 7.0}
-    };
-
-    // Generate random moves pool based on weighted moves
-    t_move random_moves[9];  // Array to hold 9 random moves
-    generate_random_moves_pool(random_moves, 9, weighted_moves, NUM_MOVES);
+    // Generate a random pool of moves
+    t_move random_moves_pool[RANDOM_POOL_SIZE];
+    generate_random_moves_pool(random_moves_pool, RANDOM_POOL_SIZE, weighted_moves, NUM_MOVES);
+    print_moves_pool(random_moves_pool, RANDOM_POOL_SIZE);
 
     while (loc.pos.x != arx || loc.pos.y != ary) {
         printf("\n=========================\n");
         printf("Phase #%d\n", cpt);
         printf("=========================\n");
 
-        // Build the tree based on current position (this will be updated dynamically each phase)
-        p_nnode root = buildTree(map, loc.pos.x, loc.pos.y, 5, 9, random_moves, 9);
-        p_nnode min = searchmin(root, root);  // Find the minimum-cost leaf (optimal move)
-
+        p_nnode root = buildTree(map, loc.pos.x, loc.pos.y, 5, 9, random_moves_pool, RANDOM_POOL_SIZE);
+        p_nnode min = searchmin(root, root);  // Find the minimum-cost leaf
         printf("Minimum value in tree: %d\n", min->value);
 
-        p_nnode chemin[100];  // To hold the path from root to the minimum-cost node
+        p_nnode chemin[100];
         int index = 0;
 
-        // Find the path to the minimum-cost node
         if (findpath(root, min, chemin, &index)) {
             printf("Path from root to min: ");
             for (int i = 0; i < index; i++) {
-                printf("[%d] ", chemin[i]->value);  // Print each step of the path
+                printf("[%d] ", chemin[i]->value);
             }
             printf("\n");
         } else {
             printf("No path found to min.\n");
-            break;  // Exit if no valid path is found
+            break;
         }
 
-        // Add the found path to the full path
         for (int i = 0; i < index; i++) {
             chemin_complet[chemin_complet_index++] = chemin[i];
         }
 
-        // Execute the moves along the path
         for (int i = 1; i < index; i++) {
             t_move move = chemin[i]->movement;
-            move_robot_and_print(&loc, move, map, &reg);  // Pass map for validation
+            move_robot_and_print(&loc, move, map, &reg);
 
-            // After each move, check if the robot has reached the target position or the base (cost = 0)
             if ((loc.pos.x == arx && loc.pos.y == ary) || map.costs[loc.pos.y][loc.pos.x] == 0) {
                 printf("Target or base reached in phase #%d: (%d, %d)\n", cpt, loc.pos.x, loc.pos.y);
-                return;  // Exit the function as the robot has reached the target or base
+                return;
             }
         }
 
-        // Ensure no more than 4 moves in the next phase if on Reg terrain
         if (cpt == 4 && reg == 1) {
             printf("Only 4 moves allowed in the next phase due to Reg terrain.\n");
-            break;  // End the current phase early if we are on Reg terrain
+            break;
         }
 
-        cpt++;  // Increment phase counter
+        cpt++;
         if (cpt == 5) {
-            break;  // Exit after 5 phases
+            break;
         }
     }
 
-    // If the loop exits, the target was reached
     printf("Final position: (%d, %d), orientation: %d\n", loc.pos.x, loc.pos.y, loc.ori);
 }
