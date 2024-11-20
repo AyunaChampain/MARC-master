@@ -24,12 +24,12 @@ void generate_random_moves_pool(t_move pool[], int pool_size, t_weighted_move mo
 void print_moves_pool(t_move pool[], int pool_size);
 
 // Tree-building functions
-void addNeighborsAsChildrenRecursive(p_nnode node, t_localisation loc, t_map map, int depth, int max_moves, t_move pool[], int pool_size);
-p_nnode buildTree(t_map map, int posx, int posy, int depth, int max_moves, t_move pool[], int pool_size);
+void addNeighborsAsChildrenRecursive(p_nnode node, t_localisation loc, t_map map, int depth, int max_moves, t_move pool[], int pool_size, int reg) ;
+p_nnode buildTree(t_map map, int posx, int posy, int depth, int max_moves, t_move pool[], int pool_size, int reg) ;
 
 // Movement functions
 void move_robot_and_print(t_localisation *loc, t_move movement, t_map map, int* reg);
-
+void remove_move_from_pool(t_move pool[], int *pool_size, t_move move);
 // Main bot function
 void bot_function(struct s_map map, int arx, int ary);
 

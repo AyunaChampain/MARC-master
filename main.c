@@ -46,7 +46,7 @@
     int arx = 2 ;
     int ary = 1 ;
 
-
+     srand((unsigned int)time(NULL));
      bot_function(map, arx, ary);
 
      return 0;
