@@ -13,6 +13,7 @@ typedef struct nnode {
     int x;      // Coordonnée x
     int y;
     t_move movement;
+    t_orientation ori;
 } t_nnode, *p_nnode;
 
 

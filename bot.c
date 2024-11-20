@@ -111,18 +111,21 @@ void addNeighborsAsChildrenRecursive(p_nnode node, t_localisation loc, t_map map
     // Limiter à 4 enfants seulement si reg = 1
     int max_children = (reg == 1) ? 4 : pool_size;
 
-    // Itérer sur les mouvements possibles, limité à max_children si reg = 1
-    for (int i = 0; i < max_children; i++) {  // Limité à max_children si reg = 1
-        t_move mov = pool_copy[i];  // Considérer seulement les mouvements présents dans le pool copié
+    // Itérer sur les mouvements possibles
+    for (int i = 0; i < max_children; i++) {
+        t_move mov = pool_copy[i];
 
-        // Vérifier si le mouvement est valide (c'est-à-dire, s'il est toujours dans le pool)
+        // Vérifier si le mouvement est valide
         if (is_valid_move_in_pool(mov, pool_copy, pool_size)) {
-            t_localisation next_loc = move(loc, mov);
+            t_localisation next_loc = move(loc, mov);  // Calculer la nouvelle position en tenant compte de l'orientation
 
             // Vérifier si la position est valide dans la carte
             if (isValidPosition(next_loc.pos.x, next_loc.pos.y, map)) {
                 int cost = map.costs[next_loc.pos.y][next_loc.pos.x];
+
+                // Créer un nœud avec la nouvelle position et orientation
                 p_nnode child = createNode(cost, next_loc.pos.x, next_loc.pos.y, mov);
+                child->ori = next_loc.ori;  // Mettre à jour l'orientation du robot dans le nœud enfant
 
                 // Ajouter le nœud enfant au nœud actuel
                 add_child(node, child);
@@ -140,10 +143,6 @@ void addNeighborsAsChildrenRecursive(p_nnode node, t_localisation loc, t_map map
 
 
 
-
-// Build the tree based on the current position and moves pool
-// Construire l'arbre basé sur la position actuelle et le pool de mouvements
-// Construire l'arbre basé sur la position actuelle et le pool de mouvements
 p_nnode buildTree(t_map map, int posx, int posy, int depth, int max_moves, t_move pool[], int pool_size, int reg) {
     t_localisation start_loc = loc_init(posx, posy, NORTH); // Orientation de départ
     int root_cost = map.costs[posy][posx];
@@ -173,7 +172,7 @@ void move_robot_and_print(t_localisation *loc, t_move movement, t_map map, int* 
         }
     }
 
-    // Calculer la nouvelle position
+    // Calculer la nouvelle position en tenant compte de l'orientation
     t_localisation new_loc = move(*loc, movement);
 
     if (isValidPosition(new_loc.pos.x, new_loc.pos.y, map)) {
@@ -194,6 +193,8 @@ void move_robot_and_print(t_localisation *loc, t_move movement, t_map map, int* 
         *reg = 1;
     }
 }
+
+
 
 
 // Fonction pour afficher le chemin
