@@ -1,5 +1,6 @@
  #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "map.h"
 #include "nbinarytree.h"
 #include "node.h"
@@ -47,7 +48,6 @@
 
 
      bot_function(map, arx, ary);
-
 
      return 0;
  }

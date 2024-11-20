@@ -1,20 +1,36 @@
-//
-// Created by ayuna on 16/11/2024.
-//
-#include "nbinarytree.h"
-#include "loc.h"
+#ifndef BOT_H
+#define BOT_H
+
 #include "map.h"
+#include "node.h"
+#include "loc.h"
 #include "moves.h"
-#ifndef UNTITLED1_BOT_H
-#define UNTITLED1_BOT_H
+#include "nbinarytree.h"
 
+// Move selection structure with weighted probabilities
+typedef struct {
+    t_move move;
+    double probability;
+} t_weighted_move;
 
-void addNeighborsAsChildren(p_nnode, t_position, t_map);
-p_nnode buildTree(t_map, int, int, int);
-void addNeighborsAsChildrenRecursive(p_nnode, t_localisation, t_map, int) ;
+// Function declarations
 
-void bot_function(struct s_map, int, int) ;
-t_move adjustMoveForTerrain(t_localisation loc, t_move move, t_soil map[6][7]);
+// Helper functions
+int isValidPosition(int x, int y, t_map map);
 
+// Random move selection functions
+t_move choose_random_move(t_weighted_move moves[], int size);
+void generate_random_moves_pool(t_move pool[], int pool_size, t_weighted_move moves[], int num_moves);
+void print_moves_pool(t_move pool[], int pool_size);
 
-#endif //UNTITLED1_BOT_H
+// Tree-building functions
+void addNeighborsAsChildrenRecursive(p_nnode node, t_localisation loc, t_map map, int depth, int max_moves, t_move pool[], int pool_size);
+p_nnode buildTree(t_map map, int posx, int posy, int depth, int max_moves, t_move pool[], int pool_size);
+
+// Movement functions
+void move_robot_and_print(t_localisation *loc, t_move movement, t_map map, int* reg);
+
+// Main bot function
+void bot_function(struct s_map map, int arx, int ary);
+
+#endif // BOT_H
