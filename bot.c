@@ -164,12 +164,30 @@ void move_robot_and_print(t_localisation *loc, t_move movement, t_map map, int* 
 
     // Ajuster le mouvement en fonction du terrain
     if (terrain_type == ERG) {
-        if (movement == F_10) movement = 0;
-        else if (movement == F_20) movement = F_10;
-        else if (movement == F_30) movement = F_20;
-        if (movement == U_TURN) {
+        printf("Erg");
+        if (movement == F_10 || movement == B_10)
+        {
+            movement = 0;
+        }
+        else
+        {
+            if (movement == F_20) movement = F_10;
+            else
+            {
+                if (movement == F_30) movement = F_20;
+            }
+        }
+        if (movement == U_TURN)
+        {
             movement = (rand() % 2) ? T_LEFT : T_RIGHT;
         }
+        else
+        {
+            if (movement == T_RIGHT || movement == T_LEFT) {
+                movement = 0;
+            }
+        }
+
     }
 
     // Calculer la nouvelle position en tenant compte de l'orientation
@@ -183,7 +201,7 @@ void move_robot_and_print(t_localisation *loc, t_move movement, t_map map, int* 
             printf("Move: %s\n", getMoveAsString(movement));
             *loc = new_loc; // Mise à jour de la position et de l'orientation
         }
-        printf("Updated position: (%d, %d), orientation: %d\n", loc->pos.x, loc->pos.y, loc->ori);
+        printf("Updated position: (%d, %d), orientation: %d, move : %s\n", loc->pos.x, loc->pos.y, loc->ori, getMoveAsString(movement));
     } else {
         printf("Invalid move: The robot cannot move out of bounds to (%d, %d).\n", new_loc.pos.x, new_loc.pos.y);
     }
