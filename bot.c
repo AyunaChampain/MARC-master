@@ -67,7 +67,7 @@ void print_moves_pool(t_move pool[], int pool_size)
     {
         printf("%s ", getMoveAsString(pool[i])); // Assuming getMoveAsString converts move to a string
     }
-    printf("\n");
+    printf("\n\n");
 }
 
 //Fonction vérifiant la validité d'un mouvement
@@ -199,7 +199,7 @@ void move_robot_and_print(t_localisation *loc, t_move movement, t_map map, int* 
     if (terrain_type == ERG)
     {
         //Si le mouvement est un Erg, réduit d'un mouvement
-        printf("Le robot a rencontré un Erg, réduction du mouvement en cours") ;
+        printf("Le robot a rencontre un Erg, reduction du mouvement") ;
         if (movement == F_10 || movement == B_10)
         {
             movement = 0;
@@ -237,15 +237,16 @@ void move_robot_and_print(t_localisation *loc, t_move movement, t_map map, int* 
         //Affiche les mouvements et les mets à jour
         if (movement == T_LEFT || movement == T_RIGHT || movement == U_TURN)
         {
-            printf("Turn: %s\n", getMoveAsString(movement));
+            //printf("Turn: %s\n", getMoveAsString(movement));
             loc->ori = new_loc.ori; // Mise à jour de l'orientation uniquement
         }
         else
         {
             printf("Move: %s\n", getMoveAsString(movement));
+
             *loc = new_loc; // Mise à jour de la position et de l'orientation
         }
-        printf("Updated position: (%d, %d), orientation: %d, move : %s\n", loc->pos.x, loc->pos.y, loc->ori, getMoveAsString(movement));
+        printf("Updated position: (%d, %d), orientation: %d\n", loc->pos.x, loc->pos.y, loc->ori);
     }
     else
     {
@@ -255,8 +256,12 @@ void move_robot_and_print(t_localisation *loc, t_move movement, t_map map, int* 
     //Si le terrain est un reg, la prochaine phase a seulement 4 mouvements
     if (terrain_type == REG)
     {
-        printf("Robot has been shaken on Reg terrain. Limiting next phase to 4 moves.\n");
+        printf("Robot has been shaken on Reg terrain. Limiting next phase to 4 moves.\n\n");
         *reg = 1;
+    }
+    else
+    {
+        printf("\n");
     }
 }
 
@@ -289,7 +294,7 @@ void bot_function(struct s_map map, int x, int y)
         //Affiche la phase
         printf("\n=========================\n");
         printf("Phase #%d\n", cpt);
-        printf("=========================\n");
+        printf("=========================\n\n");
 
         //Initialisation des variables
         t_move random_moves_pool[RANDOM_POOL_SIZE];
@@ -306,7 +311,6 @@ void bot_function(struct s_map map, int x, int y)
         {
             min = searchmin(root,root);
         }
-        printf("Minimum value in tree: %d\n", min->value);
 
         // Recherche du chemin
         p_nnode chemin[100];
@@ -315,13 +319,11 @@ void bot_function(struct s_map map, int x, int y)
         // Dans la fonction bot_function(), après la recherche du chemin
         if (findpath(root, min, chemin, &index))
         {
-            printf("Path from root to min found.\n");
             // Afficher le chemin trouvé
-            print_path(chemin, index);
+            //print_path(chemin, index);
         }
         else
         {
-            printf("No path found to min.\n");
             break;
         }
 
