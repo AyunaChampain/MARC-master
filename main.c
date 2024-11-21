@@ -13,12 +13,49 @@
  int main()
  {
      t_map map;
+
+     int choice = 0 ;
+
+     printf("Quel scénario voulez-vous tester ? (Entre 0 et 3) ") ;
+     scanf("%d", &choice) ;
+
+     //Génère la map du scénario choisi
+     if (choice == 0)
+     {
+        #if defined(_WIN32) || defined(_WIN64)
+                 map = createMapFromFile("..\\maps\\example1.map");
+        #else
+                 map = createMapFromFile("../maps/example1.map");
+        #endif
+     }
+     if (choice == 1)
+     {
+        #if defined(_WIN32) || defined(_WIN64)
+                 map = createMapFromFile("..\\maps\\map1.map");
+        #else
+                 map = createMapFromFile("../maps/example1.map");
+        #endif
+     }
+     if (choice == 2)
+     {
+        #if defined(_WIN32) || defined(_WIN64)
+                 map = createMapFromFile("..\\maps\\map2.map");
+        #else
+                 map = createMapFromFile("../maps/example1.map");
+        #endif
+     }
+     if (choice == 3)
+     {
+        #if defined(_WIN32) || defined(_WIN64)
+                 map = createMapFromFile("..\\maps\\map4.map");
+        #else
+                 map = createMapFromFile("../maps/example1.map");
+        #endif
+     }
+
+
      //Code de base pour créer et afficher la map -----------------------------------------------------------------------------------------------
-    #if defined(_WIN32) || defined(_WIN64)
-         map = createMapFromFile("..\\maps\\example1.map");
-    #else
-         map = createMapFromFile("../maps/example1.map");
-    #endif
+
      printf("Map created with dimensions %d x %d\n", map.y_max, map.x_max);
      for (int i = 0; i < map.y_max; i++)
      {
@@ -38,10 +75,35 @@
          printf("\n");
      }
      displayMap(map);
+
 //------------------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------------
-    int x = 5; //position x du robot
-    int y = 6; //position y du robot
+
+    int x = 0 ;
+    int y = 0 ;
+
+    //Initialise les positions du bot selon le scénario choisi
+    if (choice == 0)
+    {
+        x = 4 ;
+        y = 5 ;
+    }
+     if (choice == 1)
+     {
+         x = 0 ;
+         y = 5 ;
+     }
+     if (choice == 2)
+     {
+         x = 1 ;
+         y = 1 ;
+     }
+     if (choice == 3)
+     {
+         x = 2 ;
+         y = 1 ;
+     }
+
 
      srand((unsigned int)time(NULL)); //Permet de gérer une génération aléatoire
      bot_function(map, x, y); //Appelle la fonction utilisée pour faire fonctionner le robot

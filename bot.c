@@ -10,6 +10,7 @@
 // Define constants
 #define NUM_MOVES 7
 #define RANDOM_POOL_SIZE 9
+#define MAX_PHASES 200
 
 // Weighted moves
 t_weighted_move weighted_moves[NUM_MOVES] = {
@@ -377,6 +378,11 @@ void bot_function(struct s_map map, int x, int y)
 
         // Passage à la phase suivante
         cpt++;
+        if (map.costs[loc.pos.y][loc.pos.x] != 0 && cpt > MAX_PHASES) {
+            printf("Robot could not reach the target. Exiting...\n");
+            break;
+        }
+
     }
 
     printf("Final position: (%d, %d), orientation: %d\n", loc.pos.x, loc.pos.y, loc.ori);
