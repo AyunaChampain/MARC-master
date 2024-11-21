@@ -13,16 +13,12 @@
  int main()
  {
      t_map map;
-
-     // The following preprocessor directive checks if the code is being compiled on a Windows system.
-     // If either _WIN32 or _WIN64 is defined, it means we are on a Windows platform.
-     // On Windows, file paths use backslashes (\), hence we use the appropriate file path for Windows.
-#if defined(_WIN32) || defined(_WIN64)
-     map = createMapFromFile("..\\maps\\example1.map");
-#else
-     map = createMapFromFile("../maps/example1.map");
-#endif
-
+     //Code de base pour créer et afficher la map -----------------------------------------------------------------------------------------------
+    #if defined(_WIN32) || defined(_WIN64)
+         map = createMapFromFile("..\\maps\\example1.map");
+    #else
+         map = createMapFromFile("../maps/example1.map");
+    #endif
      printf("Map created with dimensions %d x %d\n", map.y_max, map.x_max);
      for (int i = 0; i < map.y_max; i++)
      {
@@ -42,12 +38,13 @@
          printf("\n");
      }
      displayMap(map);
+//------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------
+    int x = 5; //position x du robot
+    int y = 6; //position y du robot
 
-    int arx = 2 ;
-    int ary = 1 ;
-
-     srand((unsigned int)time(NULL));
-     bot_function(map, arx, ary);
+     srand((unsigned int)time(NULL)); //Permet de gérer une génération aléatoire
+     bot_function(map, x, y); //Appelle la fonction utilisée pour faire fonctionner le robot
 
      return 0;
  }

@@ -10,9 +10,9 @@
  */
 typedef struct s_stack
 {
-    int *values;
-    int size;
-    int nbElts;
+    int *values; //valeurs
+    int size; //taille
+    int nbElts; //nombre d'éléments
 } t_stack;
 
 /**
