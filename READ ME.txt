@@ -1,0 +1,13 @@
+**Projet du robot MARC**
+Groupe C - Equipe 5
+
+Fonctionnement :
+Lors du lancement du projet, vous vous verrez proposer de choisir un scénario.
+Il y a quatre scénarios au total, numérotés de 0 à 3.
+Chacun a une carte et une position de départ différentes.
+
+Il sera alors affiché la carte, puis la description phase par phase de :
+- la liste des mouvements générés aléatoirement
+- Le mouvement utilisé
+- La nouvelle position
+- L'indication de la rencontre d'un erg ou d'un reg si rencontré
