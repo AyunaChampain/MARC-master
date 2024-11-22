@@ -306,8 +306,9 @@ void bot_function(struct s_map map, int x, int y)
         // Construction de l'arbre
         p_nnode root = buildTree(map, loc.pos.x, loc.pos.y, 5, max_moves, random_moves_pool, RANDOM_POOL_SIZE, reg);
 
-        // Trouver le chemin avec le coût minimum
+        // Trouver la feuille au coût minimum
         p_nnode min = searchleaf(root, root);
+        //Si un noeud est égal à zéro, la base est trouvée avant une feuille
         if (searchmin(root,root)->value == 0)
         {
             min = searchmin(root,root);
@@ -320,7 +321,6 @@ void bot_function(struct s_map map, int x, int y)
         // Dans la fonction bot_function(), après la recherche du chemin
         if (findpath(root, min, chemin, &index))
         {
-            // Afficher le chemin trouvé
             //print_path(chemin, index);
         }
         else
