@@ -186,6 +186,7 @@ p_nnode buildTree(t_map map, int posx, int posy, int depth, int max_moves, t_mov
     // Ajouter les voisins récursivement
     addNeighborsAsChildrenRecursive(root, start_loc, map, depth, max_moves, pool, pool_size, reg);
 
+    //display_tree_visual(root, 0);
     return root;
 }
 
